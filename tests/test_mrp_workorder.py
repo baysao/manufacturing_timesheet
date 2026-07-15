@@ -66,6 +66,7 @@ class TestMrpWorkorder(TransactionCase):
         # Create an employee
         cls.employee = cls.env['hr.employee'].create({
             'name': 'John Doe',
+            'user_id': cls.env.user.id,
         })
 
         # Find or create a productivity loss record
@@ -87,7 +88,6 @@ class TestMrpWorkorder(TransactionCase):
             'date_start': datetime(2026, 6, 8, 10, 0, 0),
             'date_end': datetime(2026, 6, 8, 11, 0, 0),
             'duration': 60.0,
-            'employee_id': cls.employee.id,
         })
 
     def test_workorder_finish_creates_project_task_and_timesheet(self):

@@ -65,11 +65,15 @@ class MrpWorkorder(models.Model):
                     'allocated_hours': workorder.duration_expected,
                 })
             for time_entry in workorder.time_ids:
+                employee = self.env['hr.employee'].search([
+                    ('user_id', '=', time_entry.user_id.id),
+                    ('company_id', '=', time_entry.company_id.id)
+                ], limit=1)
                 self.env['account.analytic.line'].create({
                     'task_id': task.id,
                     'date': time_entry.date_start.date(),
                     'name': f"{workorder.name} in {workorder.workcenter_id.name} for {workorder.product_id.display_name}",
-                    'employee_id': time_entry.employee_id.id,
+                    'employee_id': employee.id,
                     'unit_amount': time_entry.duration / 60,
                     'is_manufacturing': True,
                 })
